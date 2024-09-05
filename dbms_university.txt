@@ -1,0 +1,272 @@
+cusat@cusat-SBKPF:~$ sudo mysql
+[sudo] password for cusat: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.37-0ubuntu0.23.10.2 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create table Depart( department_id int primary key, department_name varchar(50), manager_id int, loc varchar(50));
+ERROR 1046 (3D000): No database selected
+mysql> show databases
+    -> ;
++--------------------+
+| Database           |
++--------------------+
+| Student            |
+| Work               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+6 rows in set (0.00 sec)
+
+mysql> create database university
+    -> ;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> create table Depart( department_id int primary key, department_name varchar(50), manager_id int, loc varchar(50));
+ERROR 1046 (3D000): No database selected
+mysql> use university;
+Database changed
+mysql> create table Depart( department_id int primary key, department_name varchar(50), manager_id int, loc varchar(50));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table Emp( emp_no int primary key, name varchar(50), job varchar(50), salary int, hiredate date, commission varchar(100), department_no int);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> drop table depart
+    -> ;
+ERROR 1051 (42S02): Unknown table 'university.depart'
+mysql> drop table Depart;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> drop table Emp;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table Depart( department_id int primary key, department_name varchar(50), manager_id int, loc varchar(50));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table Emp( emp_no int primary key, name varchar(50), job varchar(50), salary int, hiredate date, commission varchar(100), department_no int foreign key);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'foreign key)' at line 1
+mysql> create table Emp( emp_no int primary key, name varchar(50), job varchar(50), salary decimal(10,2), hiredate date, commission float, department_no int, foreign key (department_no) references Depart(department_id);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> create table Emp( emp_no int primary key, name varchar(50), job varchar(50), salary decimal(10,2), hiredate date, commission float, department_no int, foreign key (department_no) references Depart(department_id));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into Depart (department_id, department_name, manager_id, loc) values 
+    -> (1, 'Sales', 101, 'Seattle'),
+    -> (2,'Marketing', 102, 'New york'),
+    -> (3, 'IT', 103, 'Chicago'),
+    -> (4,'HR', 104,'Seattle');
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> DESC Depart;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| department_id   | int         | NO   | PRI | NULL    |       |
+| department_name | varchar(50) | YES  |     | NULL    |       |
+| manager_id      | int         | YES  |     | NULL    |       |
+| loc             | varchar(50) | YES  |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> Select * from Depart;
++---------------+-----------------+------------+----------+
+| department_id | department_name | manager_id | loc      |
++---------------+-----------------+------------+----------+
+|             1 | Sales           |        101 | Seattle  |
+|             2 | Marketing       |        102 | New york |
+|             3 | IT              |        103 | Chicago  |
+|             4 | HR              |        104 | Seattle  |
++---------------+-----------------+------------+----------+
+4 rows in set (0.00 sec)
+
+mysql> insert into Emp(emp_no, name, job, salary, hiredate, commission, department_no) values
+    -> (101, 'John', 'Manager', 45000, '1980-01-24', NULL, 1),
+    -> (102, 'Amana', 'Stock clerk', 7000, '1996-05-12', NULL, 2),
+    -> (103, 'Ayeshae','Analyst', 50000, '1999-09-21', NULL, 3),
+    -> (104, 'Sara', 'Clerk', 15000, '1991-03-16',1900, 4);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> Select name, salary 
+    -> from Emp
+    -> where salary not between 5000 and 35000;
++---------+----------+
+| name    | salary   |
++---------+----------+
+| John    | 45000.00 |
+| Ayeshae | 50000.00 |
++---------+----------+
+2 rows in set (0.00 sec)
+
+mysql> select name, job, hiredate
+    -> from Emp
+    -> where hiredate between '1990-02-20' and '1998-05-01'
+    -> order by hiredate ASC;
++-------+-------------+------------+
+| name  | job         | hiredate   |
++-------+-------------+------------+
+| Sara  | Clerk       | 1991-03-16 |
+| Amana | Stock clerk | 1996-05-12 |
++-------+-------------+------------+
+2 rows in set (0.01 sec)
+
+mysql> select name as Employee, salary as "monthly salary"
+    -> from Emp
+    -> where salary between 5000 and 12000 and department_no in(2,4);
++----------+----------------+
+| Employee | monthly salary |
++----------+----------------+
+| Amana    |        7000.00 |
++----------+----------------+
+1 row in set (0.00 sec)
+
+mysql> select name, hiredate
+    -> from Emp
+    -> where year(hiredate) = '1994';
+Empty set (0.00 sec)
+
+mysql> select * from Emp;
++--------+---------+-------------+----------+------------+------------+---------------+
+| emp_no | name    | job         | salary   | hiredate   | commission | department_no |
++--------+---------+-------------+----------+------------+------------+---------------+
+|    101 | John    | Manager     | 45000.00 | 1980-01-24 |       NULL |             1 |
+|    102 | Amana   | Stock clerk |  7000.00 | 1996-05-12 |       NULL |             2 |
+|    103 | Ayeshae | Analyst     | 50000.00 | 1999-09-21 |       NULL |             3 |
+|    104 | Sara    | Clerk       | 15000.00 | 1991-03-16 |       1900 |             4 |
++--------+---------+-------------+----------+------------+------------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> select name, salary, commission from Emp
+    -> where commission is NOT NULL 
+    -> order by salary, commission DESC;
++------+----------+------------+
+| name | salary   | commission |
++------+----------+------------+
+| Sara | 15000.00 |       1900 |
++------+----------+------------+
+1 row in set (0.00 sec)
+
+mysql> select name, job
+    -> from Emp 
+    -> where emp_no not in(select manager_id from Depart);
+Empty set (0.00 sec)
+
+mysql> insert into Depart values(5, 'Sales', NULL, 'London');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select name, job from Emp  where emp_no not in(select manager_id from Depart);
+Empty set (0.00 sec)
+
+mysql> insert into Emp values(105, 'Rihanna', 'CLerk', 17000, '1996-09-23', 2000,5);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select name, job from Emp  where emp_no not in(select manager_id from Depart);
+Empty set (0.00 sec)
+
+mysql> select name from Emp
+    -> where substring(Name, 3,1) = 'a';
++-------+
+| name  |
++-------+
+| Amana |
++-------+
+1 row in set (0.00 sec)
+
+mysql> select name from Emp
+    -> where name like '%a%' and name like '%e%';
++---------+
+| name    |
++---------+
+| Ayeshae |
++---------+
+1 row in set (0.00 sec)
+
+mysql> select name, job, salary from Emp
+    -> where job in ('Stock clerk', 'Analyst') and salary not in (2000, 7000. 10000);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '10000)' at line 2
+mysql> select name, job, salary from Emp where job in ('Stock clerk', 'Analyst') and salary not in (2000, 7000,10000);
++---------+---------+----------+
+| name    | job     | salary   |
++---------+---------+----------+
+| Ayeshae | Analyst | 50000.00 |
++---------+---------+----------+
+1 row in set (0.00 sec)
+
+mysql> select Emp.name, Emp.department_name,Depart.department_name
+    -> from Emp
+    -> join Depart on Depart.department_id = Emp.department_no;
+ERROR 1054 (42S22): Unknown column 'Emp.department_name' in 'field list'
+mysql> select Emp.name, Emp.department_id,Depart.department_name   from Emp join Depart on Depart.department_id = Emp.department_no;
+ERROR 1054 (42S22): Unknown column 'Emp.department_id' in 'field list'
+mysql> select Emp.name, Emp.department_no,Depart.department_name   from Emp join Depart on Depart.department_id = Emp.department_no;
++---------+---------------+-----------------+
+| name    | department_no | department_name |
++---------+---------------+-----------------+
+| John    |             1 | Sales           |
+| Amana   |             2 | Marketing       |
+| Ayeshae |             3 | IT              |
+| Sara    |             4 | HR              |
+| Rihanna |             5 | Sales           |
++---------+---------------+-----------------+
+5 rows in set (0.00 sec)
+
+mysql> reate table Depart( department_id int primary key, department_name varchar(50), manager_id int, loc varchar(50));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'reate table Depart( department_id int primary key, department_name varchar(50), ' at line 1
+mysql> select emp_no, name from Emp
+    -> where department_no in(select department_no from Emp
+    -> where name like '%u%');
+Empty set (0.01 sec)
+
+mysql> select name, hiredate
+    -> from Emp
+    -> where department_no = (select department_no from Emp where name ='Sara')
+    -> and (name <> 'John');
++------+------------+
+| name | hiredate   |
++------+------------+
+| Sara | 1991-03-16 |
++------+------------+
+1 row in set (0.00 sec)
+
+mysql> select * from Emp;
++--------+---------+-------------+----------+------------+------------+---------------+
+| emp_no | name    | job         | salary   | hiredate   | commission | department_no |
++--------+---------+-------------+----------+------------+------------+---------------+
+|    101 | John    | Manager     | 45000.00 | 1980-01-24 |       NULL |             1 |
+|    102 | Amana   | Stock clerk |  7000.00 | 1996-05-12 |       NULL |             2 |
+|    103 | Ayeshae | Analyst     | 50000.00 | 1999-09-21 |       NULL |             3 |
+|    104 | Sara    | Clerk       | 15000.00 | 1991-03-16 |       1900 |             4 |
+|    105 | Rihanna | CLerk       | 17000.00 | 1996-09-23 |       2000 |             5 |
++--------+---------+-------------+----------+------------+------------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from Depart;
++---------------+-----------------+------------+----------+
+| department_id | department_name | manager_id | loc      |
++---------------+-----------------+------------+----------+
+|             1 | Sales           |        101 | Seattle  |
+|             2 | Marketing       |        102 | New york |
+|             3 | IT              |        103 | Chicago  |
+|             4 | HR              |        104 | Seattle  |
+|             5 | Sales           |       NULL | London   |
++---------------+-----------------+------------+----------+
+5 rows in set (0.00 sec)
+
+mysql>  select name, job
+    ->     -> from Emp 
+    ->     -> where emp_no not in(select manager_id from Depart);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from Emp 
+    -> where emp_no not in(select manager_id from Depart)' at line 2
+
