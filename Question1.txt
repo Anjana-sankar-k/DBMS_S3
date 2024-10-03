@@ -1,0 +1,108 @@
+mysql> create database university;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use university;
+Database changed
+mysql> create table student(
+    -> student_id int primary key,
+    -> name varchar(50),
+    -> department varchar(50),
+    -> mark1 int,
+    -> mark2 int,
+    -> cgpa decimal(3,2) );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> insert into student(student_id, name, department, mark1,
+mark2, cgpa) values
+    -> (101, 'John', 'CS', 85, 90, 8.5),
+    -> (102, 'Alice', 'EC', 88, 84, 8.2),
+    -> (103, 'Bob', 'IT', 76, 82, 9.0),
+    -> (104, 'Anu', 'CS', 92, 89, 9.0),
+    -> (105, 'Cathy', 'EE', 80, 83, 8.0);
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> create table hostel_details(
+    -> std_id int primary key,
+    -> stud_name varchar(50),
+    -> block char(1),
+    -> roomno int);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into hostel_details values
+    -> (101, 'John','A', 101),
+    -> (102, 'Alice', 'B', 102),
+    -> (103, 'Bob', 'A', 103),
+    -> (104, 'Anu', 'A', 104),
+    -> (105, 'Cathy', 'B', 108);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from student;
++------------+-------+------------+-------+-------+------+
+| student_id | name  | department | mark1 | mark2 | cgpa |
++------------+-------+------------+-------+-------+------+
+|        101 | John  | CS         |    85 |    90 | 8.50 |
+|        102 | Alice | EC         |    88 |    84 | 8.20 |
+|        103 | Bob   | IT         |    76 |    82 | 9.00 |
+|        104 | Anu   | CS         |    92 |    89 | 9.00 |
+|        105 | Cathy | EE         |    80 |    83 | 8.00 |
++------------+-------+------------+-------+-------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from hostel_details;
++--------+-----------+-------+--------+
+| std_id | stud_name | block | roomno |
++--------+-----------+-------+--------+
+|    101 | John      | A     |    101 |
+|    102 | Alice     | B     |    102 |
+|    103 | Bob       | A     |    103 |
+|    104 | Anu       | A     |    104 |
+|    105 | Cathy     | B     |    108 |
++--------+-----------+-------+--------+
+5 rows in set (0.00 sec)
+
+mysql> alter table hostel_details rename to hostel;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> update student
+    -> set cgpa = 8.0
+    -> where student_id = 103;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select name from student where cgpa > 8.0;
++-------+
+| name  |
++-------+
+| John  |
+| Alice |
+| Anu   |
++-------+
+3 rows in set (0.00 sec)
+
+mysql> select stud_name from hostel where block = 'A';
++-----------+
+| stud_name |
++-----------+
+| John      |
+| Bob       |
+| Anu       |
++-----------+
+3 rows in set (0.00 sec)
+
+mysql> select name from student where department = 'CS';
++------+
+| name |
++------+
+| John |
+| Anu  |
++------+
+2 rows in set (0.00 sec)
+
+mysql> delete from hostel where roomno = 108;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> update student set department = 'EC' where name = 'Anu';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
