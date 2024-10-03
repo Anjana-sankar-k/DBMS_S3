@@ -1,0 +1,80 @@
+mysql> insert into employee values
+    -> (101, "yeonjun", "product manager", 34, 120000),
+    -> (102, "soobin", "secretary", 34, 200000),
+    -> (103, "kai", "hr assistant", 36, 100000),
+    -> (104, "beomgyu", "strategic planner", 36, 300000),
+    -> ;
+
+mysql> insert into employee values (105, "taehyun","hr manager", 36, 150000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from employee;
++-------------+---------------+-------------------+---------------+--------+
+| employee_no | employee_name | job               | department_no | salary |
++-------------+---------------+-------------------+---------------+--------+
+|         101 | yeonjun       | product manager   |            34 | 120000 |
+|         102 | soobin        | secretary         |            34 | 200000 |
+|         103 | kai           | hr assistant      |            36 | 100000 |
+|         104 | beomgyu       | strategic planner |            36 | 300000 |
+|         105 | taehyun       | hr manager        |            36 | 150000 |
++-------------+---------------+-------------------+---------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> create view employee_view as select * from employee;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select *from employee_view;
++-------------+---------------+-------------------+---------------+--------+
+| employee_no | employee_name | job               | department_no | salary |
++-------------+---------------+-------------------+---------------+--------+
+|         101 | yeonjun       | product manager   |            34 | 120000 |
+|         102 | soobin        | secretary         |            34 | 200000 |
+|         103 | kai           | hr assistant      |            36 | 100000 |
+|         104 | beomgyu       | strategic planner |            36 | 300000 |
+|         105 | taehyun       | hr manager        |            36 | 150000 |
++-------------+---------------+-------------------+---------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select employee_no, employee_name, department_no, job from employee_view;
++-------------+---------------+---------------+-------------------+
+| employee_no | employee_name | department_no | job               |
++-------------+---------------+---------------+-------------------+
+|         101 | yeonjun       |            34 | product manager   |
+|         102 | soobin        |            34 | secretary         |
+|         103 | kai           |            36 | hr assistant      |
+|         104 | beomgyu       |            36 | strategic planner |
+|         105 | taehyun       |            36 | hr manager        |
++-------------+---------------+---------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee_view where job = "strategic planner";
++-------------+---------------+-------------------+---------------+--------+
+| employee_no | employee_name | job               | department_no | salary |
++-------------+---------------+-------------------+---------------+--------+
+|         104 | beomgyu       | strategic planner |            36 | 300000 |
++-------------+---------------+-------------------+---------------+--------+
+1 row in set (0.00 sec)
+
+mysql> update employee_view set department_no = 34 where employee_no = 105;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employee where employee_no = 104;
++-------------+---------------+-------------------+---------------+--------+
+| employee_no | employee_name | job               | department_no | salary |
++-------------+---------------+-------------------+---------------+--------+
+|         104 | beomgyu       | strategic planner |            36 | 300000 |
++-------------+---------------+-------------------+---------------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee where employee_no = 105;
++-------------+---------------+------------+---------------+--------+
+| employee_no | employee_name | job        | department_no | salary |
++-------------+---------------+------------+---------------+--------+
+|         105 | taehyun       | hr manager |            34 | 150000 |
++-------------+---------------+------------+---------------+--------+
+1 row in set (0.00 sec)
+
+mysql> drop view employee_view;
+Query OK, 0 rows affected (0.00 sec)
+
