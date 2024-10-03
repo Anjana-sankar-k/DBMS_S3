@@ -1,0 +1,54 @@
+mysql> create database tcl;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use tcl;
+Database changed
+mysql> create table employee(employee_id int primary key, employee_name varchar(50),designation varchar(50), department_no int, employee_salary int);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into employee values (101, "yeonjun", "product manager", 34, 120000), (102, "soobin", "secretary", 34, 200000), (103, "kai", "hr assistant", 36, 100000), (104, "beomgyu", "strategic planner", 36, 300000);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> insert into employee values (105, "taehyun","hr manager", 36, 150000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> savepoint s;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> insert into employee values(106, "heesung", "hr manager", 36, 160000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from employee;
++-------------+---------------+-------------------+---------------+-----------------+
+| employee_id | employee_name | designation       | department_no | employee_salary |
++-------------+---------------+-------------------+---------------+-----------------+
+|         101 | yeonjun       | product manager   |            34 |          120000 |
+|         102 | soobin        | secretary         |            34 |          200000 |
+|         103 | kai           | hr assistant      |            36 |          100000 |
+|         104 | beomgyu       | strategic planner |            36 |          300000 |
+|         105 | taehyun       | hr manager        |            36 |          150000 |
+|         106 | heesung       | hr manager        |            36 |          160000 |
++-------------+---------------+-------------------+---------------+-----------------+
+6 rows in set (0.00 sec)
+
+mysql> rollback to savepoint s;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select *from employee;
++-------------+---------------+-------------------+---------------+-----------------+
+| employee_id | employee_name | designation       | department_no | employee_salary |
++-------------+---------------+-------------------+---------------+-----------------+
+|         101 | yeonjun       | product manager   |            34 |          120000 |
+|         102 | soobin        | secretary         |            34 |          200000 |
+|         103 | kai           | hr assistant      |            36 |          100000 |
+|         104 | beomgyu       | strategic planner |            36 |          300000 |
+|         105 | taehyun       | hr manager        |            36 |          150000 |
++-------------+---------------+-------------------+---------------+-----------------+
+5 rows in set (0.00 sec)
+
+mysql> commit;
+Query OK, 0 rows affected (0.00 sec)
