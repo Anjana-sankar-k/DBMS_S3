@@ -1,1 +1,3 @@
-# DBMS_LAB
+# DBMS LAB
+
+Labwork for DBMS throughout S3
